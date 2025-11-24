@@ -21,8 +21,8 @@ async function uploadAllFiles() {
     await waitUntilAllTasksAreFinished();
     fileName = await findFirstXLSX();
   }
-
-  return allFiles;
+  const distinctArray = [...new Set(allFiles)];
+  return distinctArray;
 }
 
 async function waitUntilAllTasksAreFinished() {
