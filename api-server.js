@@ -9,7 +9,10 @@ const {
 
 const config = require("./config.js");
 const cron = require("node-cron");
-const { uploadAllFiles, hasUnfinishedTasks } = require("./infosite_upload.js");
+const {
+  uploadAllFiles,
+  hasAnyUnfinishedTasks,
+} = require("./infosite_upload.js");
 
 const app = express();
 const PORT = process.env.PORT || config.port;
@@ -213,7 +216,7 @@ app.get("/stop", (req, res) => {
   }
 });
 app.get("/axios", async (req, res) => {
-  const unfinished = await hasUnfinishedTasks();
+  const unfinished = await hasAnyUnfinishedTasks();
   res.json({ unfinished });
 });
 

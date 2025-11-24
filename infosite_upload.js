@@ -148,4 +148,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { uploadAllFiles, hasUnfinishedTasks };
+module.exports = { uploadAllFiles, hasAnyUnfinishedTasks };
