@@ -164,9 +164,11 @@ async function uploadAndSendMails(job) {
       emailResult.filesAttached
     } file(s) sent successfully to: ${emailResult.recipients.join(", ")}`;
   }
+  /*
   const allFiles = await uploadAllFiles();
   text += `\n\n⬆️ Uploading all downloaded files to InfoSite ${allFiles}...`;
   await sendEmailAfterUploadingFiles(allFiles);
+  */
   job.output.push(text);
 }
 
