@@ -384,23 +384,20 @@ function mergeSoccerFilesInCaseFileNotFound(
   console.log(`Soccer exists: ${soccerExists}`);
   console.log(`Futsal exists: ${futsalExists}`);
   console.log(`======================================\n`);
-  // Case 1: Both files exist - proceed to merge
-  if (soccerExists && futsalExists) {
-    return true;
+
+  if (!soccerExists) {
+    console.log(`FAILED. Soccer file not found: ${soccerPath}`);
+    throw new Error(`Soccer file not found: ${soccerPath}`);
   }
 
-  // Case 2: Neither file exists - nothing to merge
-  if (!soccerExists && !futsalExists) {
-    console.log(`Both Soccer and Futsal files are not found.`);
-    return false;
+  // Case 1: Both files exist - proceed to merge
+  if (futsalExists) {
+    return true;
   }
 
   let sourceFilePath = null;
 
-  if (futsalExists && !soccerExists) {
-    console.log(`Only found Futsal file: ${futsalPath}`);
-    sourceFilePath = futsalPath;
-  } else if (!futsalExists && soccerExists) {
+  if (!futsalExists) {
     console.log(`Only found Soccer file: ${soccerPath}`);
     sourceFilePath = soccerPath;
   }

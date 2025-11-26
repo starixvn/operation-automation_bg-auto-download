@@ -5,6 +5,7 @@ const fs = require("fs");
 const {
   sendTodayFilesEmail,
   sendEmailAfterUploadingFiles,
+  sendFailedEmail,
 } = require("./send-email.js");
 
 const config = require("./config.js");
@@ -118,6 +119,15 @@ function executeTest(testFile, jobType, sportName = null, triedCount = 0) {
       failedJob = job;
       successfulJob = {};
       console.log(`[${jobId}] Job failed.`);
+      sendFailedEmail(job.output.join("\n"))
+        .then(() => {
+          console.log(`[${jobId}] Job failed. Email sent.`);
+        })
+        .catch((error) => {
+          console.error(
+            `[${jobId}] Error when send mails and upload files: ${error}`
+          );
+        });
     } else {
       job.status = "completed";
       successfulJob = job;
@@ -164,11 +174,11 @@ async function uploadAndSendMails(job) {
       emailResult.filesAttached
     } file(s) sent successfully to: ${emailResult.recipients.join(", ")}`;
   }
-  /*
+
   const allFiles = await uploadAllFiles();
   text += `\n\n⬆️ Uploading all downloaded files to InfoSite ${allFiles}...`;
   await sendEmailAfterUploadingFiles(allFiles);
-  */
+
   job.output.push(text);
 }
 

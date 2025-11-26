@@ -492,6 +492,23 @@ async function overrideEventRequest(page) {
     route.continue({ url: newUrl });
   });
 }
+
+function subscribeToResponse(page) {
+  page.on("response", responseHandler);
+}
+
+function responseHandler(response) {
+  const url = response.url();
+  if (url.includes("/events/")) {
+    const statusCode = response.status();
+    console.log(">> Response URL:", url);
+    console.log(">> Response Status Code:", statusCode);
+    if (statusCode != 200) {
+      console.log("FAILED:", statusCode);
+    }
+  }
+}
+
 // Create individual test for each sport
 test.describe("Betgenius Automation - All Sports", () => {
   // Configure to run sequentially to ensure email sends only once
@@ -509,6 +526,7 @@ test.describe("Betgenius Automation - All Sports", () => {
     // Set viewport size
     test.setTimeout(1200_000);
     await overrideEventRequest(page);
+    subscribeToResponse(page);
 
     page.on("request", (request) => {
       const url = request.url();
@@ -521,7 +539,7 @@ test.describe("Betgenius Automation - All Sports", () => {
   test.afterEach(async ({}, testInfo) => {
     if (testInfo.status !== "passed") {
       hasFailures = true;
-      console.log(`❌ Test fail: ${testInfo.title}`);
+      console.log(`❌ Test failed: ${testInfo.title}`);
     }
   });
 

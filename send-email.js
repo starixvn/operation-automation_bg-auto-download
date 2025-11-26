@@ -381,6 +381,29 @@ async function sendEmailAfterUploadingFiles(files) {
   const info = await transporter.sendMail(mailOptions);
 }
 
+async function sendFailedEmail(text) {
+  const subject = `BetGenius Data - Failed to download BG files. Please download manually.`;
+
+  // Build email body with file list
+  let body = `Hello,\n\n`;
+  body += `There are some errors when downloading BG files:\n\n`;
+  body += `${text}\n`;
+  body += `This is an automated email from BetGenius Automation System.\n\n`;
+  body += `Best regards,\nBetGenius Automation`;
+
+  // Create email options
+  const mailOptions = {
+    from: emailConfig.sender,
+    to: emailConfig.recipients.join(", "),
+    subject: subject,
+    text: body,
+  };
+
+  // Create transporter and send email
+  const transporter = createTransporter();
+  const info = await transporter.sendMail(mailOptions);
+}
+
 // Command-line usage
 if (require.main === module) {
   const args = process.argv.slice(2);
@@ -448,4 +471,5 @@ module.exports = {
   sendTodayFilesEmail,
   getTodayXlsxFiles,
   sendEmailAfterUploadingFiles,
+  sendFailedEmail,
 };
